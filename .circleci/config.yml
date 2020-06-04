@@ -116,7 +116,7 @@ workflows:
                 - master
       - deploy-to-aws-s3:
           requires:
-            - build
+            - linting
           filters:
             branches:
               only:
