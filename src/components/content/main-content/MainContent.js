@@ -3,6 +3,7 @@ import './MainContent.scss';
 import Slideshow from '../Slideshow/Slideshow';
 import Pagination from '../pagination/Pagination';
 import images from './images';
+import Grid from '../grid/Grid';
 
 const MainContent = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +23,7 @@ const MainContent = () => {
           <Pagination paginate={paginate} currentPage={currentPage} totalPages={10} />
         </div>
       </div>
-      {/* Grid Component */}
+      <Grid />
     </div>
   );
 };
