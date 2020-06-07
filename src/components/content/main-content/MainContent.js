@@ -41,6 +41,7 @@ const MainContent = ({ list, movieType, totalPages, page, getMovies, setResponse
       }));
       setImages(IMAGES);
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
