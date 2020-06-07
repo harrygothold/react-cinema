@@ -20,6 +20,7 @@ const Main = ({ loadMoreMovies, page, totalPages, setResponsePageNumber, movieTy
 
   useEffect(() => {
     setResponsePageNumber(currentPage, totalPages);
+    // eslint-disable-next-line
   }, [currentPage, totalPages]);
 
   const fetchData = () => {
