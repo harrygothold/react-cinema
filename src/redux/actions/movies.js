@@ -1,5 +1,5 @@
-import { MOVIE_LIST, SET_ERROR, RESPONSE_PAGE, LOAD_MORE_RESULTS, MOVIE_TYPE } from '../types';
-import { getData } from '../../services/movies';
+import { MOVIE_LIST, SET_ERROR, RESPONSE_PAGE, LOAD_MORE_RESULTS, MOVIE_TYPE, SEARCH_RESULT, SEARCH_QUERY } from '../types';
+import { getData, searchMovies } from '../../services/movies';
 
 const dispatchMethod = (type, payload, dispatch) => {
   dispatch({
@@ -31,6 +31,22 @@ export const loadMoreMovies = (type, pageNumber) => async (dispatch) => {
   }
 };
 
+export const searchResult = (query) => async (dispatch) => {
+  try {
+    if (query !== '') {
+      const movies = await searchMovies(query);
+      const { results } = movies.data;
+      dispatchMethod(SEARCH_RESULT, results, dispatch);
+    } else {
+      dispatchMethod(SEARCH_RESULT, [], dispatch);
+    }
+  } catch (error) {
+    if (error.response) {
+      dispatchMethod(SET_ERROR, error.response.data.message, dispatch);
+    }
+  }
+};
+
 export const setResponsePageNumber = (page, totalPages) => async (dispatch) => {
   const payload = { page, totalPages };
   dispatchMethod(RESPONSE_PAGE, payload, dispatch);
@@ -38,6 +54,10 @@ export const setResponsePageNumber = (page, totalPages) => async (dispatch) => {
 
 export const setMovieType = (type) => (dispatch) => {
   dispatchMethod(MOVIE_TYPE, type, dispatch);
+};
+
+export const searchQuery = (query) => (dispatch) => {
+  dispatchMethod(SEARCH_QUERY, query, dispatch);
 };
 
 const getMovieRequest = async (type, pageNumber) => {

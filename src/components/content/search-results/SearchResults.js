@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import './Grid.scss';
+import '../grid/Grid.scss';
+import './SearchResults.scss';
 import Rating from '../rating/Rating';
 import { connect } from 'react-redux';
 import { v4 as uuidV4 } from 'uuid';
 import { IMAGE_URL } from '../../../services/movies';
 import LazyImage from '../../LazyImage/LazyImage';
 
-const Grid = ({ list }) => {
+const SearchResults = ({ searchResult, searchQuery }) => {
   const [movieData, setMovieData] = useState([]);
   useEffect(() => {
-    setMovieData(list);
-  }, [list]);
+    setMovieData(searchResult);
+  }, [searchResult]);
   return (
-    <>
+    <div className="search-keyword">
+      <div className="grid-search-title">
+        <span className="grid-text1">You searched for:</span> <span className="grid-text2">{searchQuery}</span>
+      </div>
       <div className="grid">
         {movieData.map((data) => (
           <div key={uuidV4()}>
@@ -35,16 +39,18 @@ const Grid = ({ list }) => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
-Grid.propTypes = {
-  list: PropTypes.array.isRequired
+SearchResults.propTypes = {
+  searchResult: PropTypes.array.isRequired,
+  searchQuery: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  list: state.movies.list
+  searchResult: state.movies.searchResult,
+  searchQuery: state.movies.searchQuery
 });
 
-export default connect(mapStateToProps, {})(Grid);
+export default connect(mapStateToProps, {})(SearchResults);
