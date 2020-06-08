@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import logo from '../../assets/cinema-logo.svg';
 import './Header.scss';
 import { connect } from 'react-redux';
-import { getMovies, setMovieType, setResponsePageNumber } from '../../redux/actions/movies';
+import { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult } from '../../redux/actions/movies';
 
 const HEADER_LIST = [
   {
@@ -32,9 +32,10 @@ const HEADER_LIST = [
   }
 ];
 
-const Header = ({ getMovies, setMovieType, page, totalPages, list }) => {
+const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, searchResult }) => {
   const [navClass, setNavClass] = useState(false);
   const [menuClass, setMenuClass] = useState(false);
+  const [search, setSearch] = useState('');
   const [type, setType] = useState('now_playing');
 
   const toggleMenu = () => {
@@ -56,6 +57,12 @@ const Header = ({ getMovies, setMovieType, page, totalPages, list }) => {
   const setMovieTypeUrl = (type) => {
     setType(type);
     setMovieType(type);
+  };
+
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+    searchQuery(e.target.value);
+    searchResult(e.target.value);
   };
 
   return (
@@ -81,7 +88,7 @@ const Header = ({ getMovies, setMovieType, page, totalPages, list }) => {
                 <span className="header-list-name">{data.name}</span>
               </li>
             ))}
-            <input type="text" className="search-input" placeholder="Search For A Movie" />
+            <input onChange={onSearchChange} value={search} type="text" className="search-input" placeholder="Search For A Movie" />
           </ul>
         </div>
       </div>
@@ -90,18 +97,18 @@ const Header = ({ getMovies, setMovieType, page, totalPages, list }) => {
 };
 
 const mapStateToProps = (state) => ({
-  list: state.movies.list,
   page: state.movies.page,
   totalPages: state.movies.totalPages
 });
 
 Header.propTypes = {
-  list: PropTypes.array.isRequired,
   getMovies: PropTypes.func.isRequired,
   setMovieType: PropTypes.func.isRequired,
   setResponsePageNumber: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  totalPages: PropTypes.number.isRequired
+  totalPages: PropTypes.number.isRequired,
+  searchQuery: PropTypes.func.isRequired,
+  searchResult: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { getMovies, setMovieType, setResponsePageNumber })(Header);
+export default connect(mapStateToProps, { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult })(Header);
