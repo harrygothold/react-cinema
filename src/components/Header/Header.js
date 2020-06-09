@@ -4,6 +4,7 @@ import logo from '../../assets/cinema-logo.svg';
 import './Header.scss';
 import { connect } from 'react-redux';
 import { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult } from '../../redux/actions/movies';
+import { useHistory } from 'react-router-dom';
 
 const HEADER_LIST = [
   {
@@ -33,6 +34,7 @@ const HEADER_LIST = [
 ];
 
 const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, searchResult }) => {
+  const history = useHistory();
   const [navClass, setNavClass] = useState(false);
   const [menuClass, setMenuClass] = useState(false);
   const [search, setSearch] = useState('');
@@ -46,6 +48,10 @@ const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, search
     } else {
       document.body.classList.remove('header-nav-open');
     }
+  };
+
+  const navigateHome = () => {
+    history.push('/');
   };
 
   useEffect(() => {
@@ -70,7 +76,7 @@ const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, search
       <div className="header-nav-wrapper">
         <div className="header-bar"></div>
         <div className="header-navbar">
-          <div className="header-image">
+          <div className="header-image" onClick={navigateHome}>
             <img src={logo} alt="Logo" />
           </div>
           <div className={`${menuClass ? 'header-menu-toggle is-active' : 'header-menu-toggle'}`} id="header-mobile-menu" onClick={toggleMenu}>
