@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import logo from '../../assets/cinema-logo.svg';
 import './Header.scss';
 import { connect } from 'react-redux';
-import { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult } from '../../redux/actions/movies';
-import { useHistory } from 'react-router-dom';
+import { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult, clearMovieDetails } from '../../redux/actions/movies';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const HEADER_LIST = [
   {
@@ -33,11 +33,13 @@ const HEADER_LIST = [
   }
 ];
 
-const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, searchResult }) => {
+const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, searchResult, clearMovieDetails }) => {
   const history = useHistory();
+  const location = useLocation();
   const [navClass, setNavClass] = useState(false);
   const [menuClass, setMenuClass] = useState(false);
   const [search, setSearch] = useState('');
+  const [disableSearch, setDisableSearch] = useState(false);
   const [type, setType] = useState('now_playing');
 
   const toggleMenu = () => {
@@ -51,18 +53,31 @@ const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, search
   };
 
   const navigateHome = () => {
+    clearMovieDetails();
+    setDisableSearch(false);
     history.push('/');
   };
 
   useEffect(() => {
     getMovies(type, page);
     setResponsePageNumber(page, totalPages);
+    if (location.pathname !== '/' && location.key) {
+      setDisableSearch(true);
+    }
     // eslint-disable-next-line
-  }, [type]);
+  }, [type, location, disableSearch]);
 
   const setMovieTypeUrl = (type) => {
-    setType(type);
-    setMovieType(type);
+    setDisableSearch(false);
+    if (location.pathname !== '/') {
+      clearMovieDetails();
+      history.push('/');
+      setType(type);
+      setMovieType(type);
+    } else {
+      setType(type);
+      setMovieType(type);
+    }
   };
 
   const onSearchChange = (e) => {
@@ -94,7 +109,7 @@ const Header = ({ getMovies, setMovieType, page, totalPages, searchQuery, search
                 <span className="header-list-name">{data.name}</span>
               </li>
             ))}
-            <input onChange={onSearchChange} value={search} type="text" className="search-input" placeholder="Search For A Movie" />
+            <input onChange={onSearchChange} value={search} type="text" className={`search-input ${disableSearch ? 'disabled' : ''}`} placeholder="Search For A Movie" />
           </ul>
         </div>
       </div>
@@ -114,7 +129,8 @@ Header.propTypes = {
   page: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired,
   searchQuery: PropTypes.func.isRequired,
-  searchResult: PropTypes.func.isRequired
+  searchResult: PropTypes.func.isRequired,
+  clearMovieDetails: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult })(Header);
+export default connect(mapStateToProps, { getMovies, setMovieType, setResponsePageNumber, searchQuery, searchResult, clearMovieDetails })(Header);
