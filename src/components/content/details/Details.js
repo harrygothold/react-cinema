@@ -22,6 +22,7 @@ const Details = ({ fetchMovieDetails, movie }) => {
       fetchMovieDetails(id);
     }
     setDetails(movie[0]);
+    // eslint-disable-next-line
   }, [id, movie]);
   return (
     <>
