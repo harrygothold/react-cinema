@@ -7,12 +7,18 @@ import { connect } from 'react-redux';
 import { v4 as uuidV4 } from 'uuid';
 import { IMAGE_URL } from '../../../services/movies';
 import LazyImage from '../../LazyImage/LazyImage';
+import { Link } from 'react-router-dom';
 
 const SearchResults = ({ searchResult, searchQuery }) => {
   const [movieData, setMovieData] = useState([]);
   useEffect(() => {
     setMovieData(searchResult);
   }, [searchResult]);
+
+  const formatMovieTitle = (title) => {
+    const titleStr = title.toLowerCase();
+    return titleStr.replace(/ /g, '-');
+  };
   return (
     <div className="search-keyword">
       <div className="grid-search-title">
@@ -24,7 +30,9 @@ const SearchResults = ({ searchResult, searchQuery }) => {
             {data.poster_path && (
               <LazyImage className="grid-cell" src={`${IMAGE_URL}${data.poster_path}`} alt="placeholder">
                 <div className="grid-read-more">
-                  <button className="grid-cell-button">Read More</button>
+                  <button className="grid-cell-button">
+                    <Link to={`/${data.id}/${formatMovieTitle(data.title)}/details`}>Read More</Link>
+                  </button>
                 </div>
                 <div className="grid-detail">
                   <span className="grid-detail-title">{data.title}</span>
