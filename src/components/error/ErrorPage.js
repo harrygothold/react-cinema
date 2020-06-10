@@ -7,7 +7,7 @@ const ErrorPage = () => {
     <div className="error-page">
       <h1 className="error-header">Oops! </h1>
       <p className="error-msg">Something went wrong</p>
-      <Link to="/">
+      <Link className="error-link" to="/">
         <i className="icon-home"></i> Go back to home page
       </Link>
     </div>
