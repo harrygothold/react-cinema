@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { v4 as uuidV4 } from 'uuid';
 import './Overview.scss';
-import { useParams } from 'react-router-dom';
 import { IMAGE_URL } from '../../../../services/movies';
 
 const Overview = ({ movie }) => {
