@@ -78,6 +78,16 @@ jobs:
           name: Run Prettier Check
           command: npm run prettier:check
 
+  unit-test:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - run:
+          name: Run unit test
+          command: npm run test
+
   deploy-to-aws-s3:
     executor: app-executor
     steps:
@@ -121,7 +131,7 @@ jobs:
     executor: slack-executor
     steps:
       - slack/notify:
-          message: '${CIRCLE_BRANCH} branch deployment to AWS CloudFront is complete.'
+          message: "${CIRCLE_BRANCH} branch deployment to AWS CloudFront is complete."
           webhook: ${CIRCLECI_SLACK_WEBHOOK}
       - slack/status:
           webhook: ${CIRCLECI_SLACK_WEBHOOK}
@@ -147,9 +157,19 @@ workflows:
                 - develop
                 - staging
                 - master
+      - unit-test:
+          requires:
+            - linting
+            - prettier
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
       - deploy-to-aws-s3:
           requires:
-            - prettier
+            - unit-test
           filters:
             branches:
               only:
